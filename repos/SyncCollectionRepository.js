@@ -34,7 +34,7 @@ class SyncCollectionRepository {
             Collection = Viewlog;
         }
 
-        const result = await Collection.updateOne(query, data);
+        const result = await Collection.updateOne(query, data, { upsert: true });
         console.log("warning", 'collection', Collection, "result", result)
         if (result.nModified === 0) {
             return undefined;
