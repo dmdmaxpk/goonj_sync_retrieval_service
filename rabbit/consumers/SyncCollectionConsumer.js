@@ -4,8 +4,7 @@ const syncRepo = new SyncCollectionRepository();
 class SyncCollectionConsumer{
     async consume(message){
         let dataObject = JSON.parse(message.content);
-        console.log("warning", "consuming sync", dataObject.collection, dataObject.method);
-        
+
         let {collection, method, data} = dataObject;
         let result = undefined;
 
