@@ -36,7 +36,7 @@ const syncCollectionConsumer = new SyncCollectionConsumer();
 // Start Server
 let { port } = config;
 app.listen(port, () => {
-    console.log(`Goonj Billing History Service Running On Port ${port}`);
+    console.log(`Goonj Sync and Stats Retrieval Service Running On Port ${port}`);
     rabbitMq.initServer((error, response) => {
         if(error){
             console.error(error)
