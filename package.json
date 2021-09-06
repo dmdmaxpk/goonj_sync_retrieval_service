@@ -9,15 +9,19 @@
 		"amqplib": "^0.5.5",
 		"axios": "^0.18.1",
 		"body-parser": "~1.18.2",
+		"cors": "^2.8.5",
+		"csv-writer": "^1.6.0",
 		"debug": "~2.6.9",
 		"express": "^4.17.1",
 		"express-mongo-sanitize": "^2.0.0",
+		"fs": "0.0.1-security",
 		"lodash": "^4.17.21",
 		"moment": "^2.29.1",
-		"cors": "^2.8.5",
 		"mongoose": "^5.11.0",
 		"mongoose-shortid-nodeps": "^0.6.5",
 		"morgan": "^1.10.0",
-		"nodemailer": "^6.4.2"
+		"nodemailer": "^6.4.2",
+		"path": "^0.12.7",
+		"readline": "^1.3.0"
 	}
 }

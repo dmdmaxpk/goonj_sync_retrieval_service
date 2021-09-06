@@ -147,3 +147,7 @@ exports.revenue_stats = async (req,res) =>  {
     res.send({code: 1, data: revenueStats});
 };
 
+exports.report = async (req,res) =>  {
+    historyRepo.report();
+    res.send({message: "report generated"})
+}
