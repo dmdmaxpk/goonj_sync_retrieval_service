@@ -221,6 +221,7 @@ class BillingHistoryRepository {
                 let inputData = [];
                 let counter = 0;
                 readInterface.on('line', function(line) {
+                    console.log(line)
                     if(line.startsWith("92")){
                         line = line.replace('92', '0');
                     }else if(line.startsWith("3")){
@@ -267,13 +268,14 @@ class BillingHistoryRepository {
                     ]);
                     console.log("warning", "price", price);
 
-                    let viewlog = await Viewlog.aggregate([
-                        {$match: {user_id: user._id}},
-                        {$group: {_id: "views", views: {$sum: 1}}}
-                    ])
+                    // let viewlog = await Viewlog.aggregate([
+                    //     {$match: {user_id: user._id}},
+                    //     {$group: {_id: "views", views: {$sum: 1}}}
+                    // ])
+                    let viewlog = await Viewlog.find({user_id: user._id}).sort({added_dtm: -1}).limit(1)
 
                     singObject.price = price.length > 0 ? price[0].revenue : 0;
-                    singObject.views = viewlog.length > 0 ? viewlog[0].views : 0;
+                    singObject.views = viewlog.length > 0 ? viewlog[0].added_dtm : 0;
                     console.log(singObject)
                 }
 
