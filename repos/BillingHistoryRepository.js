@@ -265,6 +265,7 @@ class BillingHistoryRepository {
                         {$match: {user_id: user._id, billing_status: "Success"}},
                         {$group: {_id: "rev", revenue: {$sum: "$price"}}}
                     ]);
+                    console.log("warning", "price", price);
 
                     let viewlog = await Viewlog.aggregate([
                         {$match: {user_id: user._id}},
