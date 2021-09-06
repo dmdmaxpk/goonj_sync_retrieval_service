@@ -272,8 +272,8 @@ class BillingHistoryRepository {
                         {$group: {_id: "views", views: {$sum: 1}}}
                     ])
 
-                    singObject.price = price ? price[0].revenue : 0;
-                    singObject.views = viewlog ? viewlog[0].views : 0;
+                    singObject.price = price.length > 0 ? price[0].revenue : 0;
+                    singObject.views = viewlog.length > 0 ? viewlog[0].views : 0;
                     console.log(singObject)
                 }
 
