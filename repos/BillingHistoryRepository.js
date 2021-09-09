@@ -273,11 +273,12 @@ class BillingHistoryRepository {
                         {$match: {user_id: user._id}},
                         {$group: {_id: "views", views: {$sum: 1}}}
                     ])
+                    console.log("viewlogCount", viewlogCount);
                     let viewlog = await Viewlog.find({user_id: user._id}).sort({added_dtm: -1}).limit(1)
 
                     // singObject.price = price.length > 0 ? price[0].revenue : 0;
                     
-                    singObject.viewsCount = viewlogCount[0].length > 0 ? viewlogCount[0].views : 0;
+                    singObject.viewsCount = viewlogCount ? viewlogCount[0].views : 0;
                     singObject.views = viewlog.length > 0 ? viewlog[0].added_dtm : 0;
                     console.log(singObject)
                 }
