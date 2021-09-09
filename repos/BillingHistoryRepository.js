@@ -9,11 +9,12 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 // const csvParser = require('csv-parser');
 const report = createCsvWriter({
-    path: './report.csv',
+    path: './viewlogreport.csv',
     header: [
         {id: 'msisdn', title: 'Msisdn'},
-        {id: 'price', title: 'Price'},
-        {id: 'views', title: 'Views'}
+        // {id: 'price', title: 'Price'},
+        {id: 'viewsCount', title: 'Views Count'},
+        {id: 'views', title: 'Last Access Date'},
     ]
 });
 class BillingHistoryRepository {
@@ -262,19 +263,21 @@ class BillingHistoryRepository {
                 console.log(user);
 
                 if(user){
-                    let price = await BillingHistory.aggregate([
-                        {$match: {user_id: user._id, billing_status: "Success"}},
-                        {$group: {_id: "rev", revenue: {$sum: "$price"}}}
-                    ]);
-                    console.log("warning", "price", price);
+                    // let price = await BillingHistory.aggregate([
+                    //     {$match: {user_id: user._id, billing_status: "Success"}},
+                    //     {$group: {_id: "rev", revenue: {$sum: "$price"}}}
+                    // ]);
+                    // console.log("warning", "price", price);
 
-                    // let viewlog = await Viewlog.aggregate([
-                    //     {$match: {user_id: user._id}},
-                    //     {$group: {_id: "views", views: {$sum: 1}}}
-                    // ])
+                    let viewlogCount = await Viewlog.aggregate([
+                        {$match: {user_id: user._id}},
+                        {$group: {_id: "views", views: {$sum: 1}}}
+                    ])
                     let viewlog = await Viewlog.find({user_id: user._id}).sort({added_dtm: -1}).limit(1)
 
-                    singObject.price = price.length > 0 ? price[0].revenue : 0;
+                    // singObject.price = price.length > 0 ? price[0].revenue : 0;
+                    
+                    singObject.viewsCount = viewlogCount[0].views;
                     singObject.views = viewlog.length > 0 ? viewlog[0].added_dtm : 0;
                     console.log(singObject)
                 }
