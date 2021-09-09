@@ -277,7 +277,7 @@ class BillingHistoryRepository {
 
                     // singObject.price = price.length > 0 ? price[0].revenue : 0;
                     
-                    singObject.viewsCount = viewlogCount[0].views;
+                    singObject.viewsCount = viewlogCount[0].length > 0 ? viewlogCount[0].views : 0;
                     singObject.views = viewlog.length > 0 ? viewlog[0].added_dtm : 0;
                     console.log(singObject)
                 }
