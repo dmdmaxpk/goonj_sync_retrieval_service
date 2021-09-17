@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const BillingHistory = mongoose.model('BillingHistory');
 const User = mongoose.model('User');
 const Viewlog = mongoose.model('ViewLog');
+const Subscription = mongoose.model('Subscription');
 const moment = require('moment');
 const path = require('path');
 const readline = require('readline');
@@ -9,12 +10,12 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 // const csvParser = require('csv-parser');
 const report = createCsvWriter({
-    path: './viewlogReports.csv',
+    path: './sourceAndDate.csv',
     header: [
         {id: 'msisdn', title: 'Msisdn'},
-        // {id: 'price', title: 'Price'},
-        {id: 'viewsCount', title: 'Views Count'},
-        {id: 'views', title: 'Last Access Date'},
+        {id: 'added_dtm', title: 'Date of Acquisition'},
+        {id: 'source', title: 'Source of Acquisition'},
+        {id: 'mid', title: 'Affiliate MID'},
     ]
 });
 class BillingHistoryRepository {
@@ -243,6 +244,47 @@ class BillingHistoryRepository {
         });
     }
 
+    async sourceAndDateReport(){
+        console.log("=> generateReportForAcquisitionSourceAndNoOfTimeUserBilled");
+        let finalResult = [];
+    
+        try{
+            var jsonPath = path.join(__dirname, '..', 'msisdn.txt');
+            let inputData = await this.readFileSync(jsonPath);    
+            console.log("### Input Data Length: ", inputData.length);
+    
+            for(let i = 0; i < inputData.length; i++){
+                if(inputData[i] && inputData[i].length === 11){
+                    let singObject = {
+                        msisdn: inputData[i]
+                    }
+                    console.log(inputData[i]);
+    
+                    let user = await this.getUser(inputData[i]);
+                    console.log(user);
+    
+                    if(user){
+                        let subscription = await Subscription.find({user_id: user._id}).sort({added_dtm: -1}).limit(1)
+                        
+                        singObject.added_dtm = subscription.length > 0 ? subscription[0].added_dtm : 0;
+                        singObject.source = subscription.length > 0 ? subscription[0].source : 0;
+                        singObject.mid = subscription.length > 0 ? subscription[0].affiliate_mid : 0;
+                        console.log(singObject)
+                    }
+    
+                        finalResult.push(singObject);
+                        console.log("### Done ", i);
+                }else{
+                    console.log("### Invalid number or number length");
+                }
+            }
+            let rep = await report.writeRecords(finalResult);
+            console.log('fin');
+        }catch(e){
+            console.log("### error - ", e);
+        }
+    }
+
     async report(){
     console.log("=> generateReportForAcquisitionSourceAndNoOfTimeUserBilled");
     let finalResult = [];
@@ -282,93 +324,14 @@ class BillingHistoryRepository {
                     console.log(singObject)
                 }
 
-
-                // if(user){
-                //     let dou = await viewLogsRepo.getDaysOfUseInDateRange(user._id, "2021-01-01T00:00:00.000Z", "2021-04-26T00:00:00.000Z");
-                //     if(dou && dou.length > 0){
-                //         singObject.dou = dou[0].count;
-                //     }else{
-                //         singObject.dou = 0;
-                //     }
-
-                //     let subscriber = await subscriberRepo.getSubscriberByUserId(user._id);
-                //     if(subscriber){
-                //         let subscriptions = await subscriptionRepo.getAllSubscriptions(subscriber._id);
-                //         if(subscriptions && subscriptions.length > 0){
-                //             let addedDtm = subscriptions[0].added_dtm;
-                //             let subsCount = subscriptions.length;
-
-                //             // let totalSuccessTransactions = 0;
-                            
-                //             // for(let sub = 0; sub < subscriptions.length; sub++){
-                //             //     totalSuccessTransactions += subscriptions[sub].total_successive_bill_counts;
-                //             // }
-
-                //             // let totalSuccessTransactionsInDec = await billinghistoryRepo.numberOfTransactionsOfSpecificSubscriber(subscriber._id, inputData[i][1] + "T00:00:00.000Z", inputData[i][1] + "T23:59:59.000Z");
-                //             let totalSuccessTransactionsInDec = await billinghistoryRepo.numberOfTransactionsOfSpecificSubscriber(subscriber._id, "2021-01-01T00:00:00.000Z", "2021-04-26T00:00:00.000Z");
-                //             let totalSuccessTransactions = totalSuccessTransactionsInDec.length > 0 ? totalSuccessTransactionsInDec[0].count : 0;
-
-                //             singObject.subs_count = subsCount;
-                //             singObject.acquisition_date = addedDtm;
-                //             singObject.act_date = inputData[i][1];
-                //             singObject.number_of_success_charging = totalSuccessTransactions;
-
-                //             if(subscriptions[0].affiliate_mid){
-                //                 singObject.acquisition_source = subscriptions[0].affiliate_mid;
-                //                 singObject.affiliate_unique_transaction_id = subscriptions[0].affiliate_unique_transaction_id;
-                //             }else{
-                //                 singObject.acquisition_source = subscriptions[0].source;
-                //                 singObject.affiliate_unique_transaction_id = subscriptions[0].affiliate_unique_transaction_id;
-                //             }
-
-                //             let otp = await otpRepo.getOtp(inputData[i]);
-                //             if(otp && otp.verified === true){
-                //                 singObject.source = "otp";
-                //             }else{
-                //                 singObject.source = "he";
-                //             }
-
-                            finalResult.push(singObject);
-                            console.log("### Done ", i);
-
-                //         }else{
-                //             console.log("### No subscriptions found for", inputData[i][0]);
-                //         }
-                //     }else{
-                //         console.log("### No subscriber found for", inputData[i][0]);    
-                //     }
-                // }else{
-                //     console.log("### No user found for", inputData[i][0]);
-                // }
+                    finalResult.push(singObject);
+                    console.log("### Done ", i);
             }else{
                 console.log("### Invalid number or number length");
             }
         }
-    
-        // console.log("### Sending email");
-        let rep = await report.writeRecords(finalResult);
 
-        // let info = await transporter.sendMail({
-        //     from: 'taha@dmdmax.com',
-        //     to:  ["muhammad.azam@dmdmax.com"],
-        //     // to:  ["farhan.ali@dmdmax.com"],
-        //     subject: `Complaint Data`, // Subject line
-        //     text: `This report contains the details of msisdns being sent us over email from Zara`,
-        //     attachments:[
-        //         {
-        //             filename: randomReport,
-        //             path: randomReportFilePath
-        //         }
-        //     ]
-        // });
-    
-        // console.log("###  [randomReport][emailSent]",info);
-        // fs.unlink(randomReportFilePath,function(err,data) {
-        //     if (err) {
-        //         console.log("###  File not deleted[randomReport]");
-        //     }
-        //     console.log("###  File deleted [randomReport]");
-        // });
+        let rep = await report.writeRecords(finalResult);
     }catch(e){
         console.log("### error - ", e);
     }
