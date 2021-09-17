@@ -37,21 +37,21 @@ let config = {
         rabbitMqConnectionString: rabbitMqConnectionString,
         queueNames: queueNames,
         codes: codes,
-        mongo_connection_url: `mongodb://localhost:27018/${db_name}`
+        mongo_connection_url: `mongodb://localhost:27017/${db_name}`
     },
     staging: {
         port: '3009',
         rabbitMqConnectionString: rabbitMqConnectionString,
         queueNames: queueNames,
         codes: codes,
-        mongo_connection_url: `mongodb://localhost:27018/${db_name}`
+        mongo_connection_url: `mongodb://localhost:27017/${db_name}`
     },
     production: {
         port: '3009',
         rabbitMqConnectionString: rabbitMqConnectionString,
         queueNames: queueNames,
         codes: codes,
-        mongo_connection_url: `mongodb://localhost:27018/${db_name}`
+        mongo_connection_url: `mongodb://localhost:27017/${db_name}`
     }
 };
 
