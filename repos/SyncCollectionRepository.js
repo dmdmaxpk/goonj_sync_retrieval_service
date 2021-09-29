@@ -23,6 +23,7 @@ class SyncCollectionRepository {
 
     async update(collectionName, data){
         let query = {_id: data._id};
+        console.log("update data", collectionName, data)
         let Collection;
         if(collectionName == 'subscriptions'){
             Collection = Subscription;
