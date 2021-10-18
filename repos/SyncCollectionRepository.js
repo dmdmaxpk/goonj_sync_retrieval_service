@@ -45,7 +45,7 @@ class SyncCollectionRepository {
             }
         }
         catch(err){
-            console.log(collectionName, data._id, data)
+            console.log(collectionName, data)
         }
     }
 
