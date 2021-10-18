@@ -22,25 +22,30 @@ class SyncCollectionRepository {
     }
 
     async update(collectionName, data){
-        let query = data._id ? {_id: data._id} : '';
-        // console.log("update data", collectionName, data)
-        let Collection;
-        if(collectionName == 'subscriptions'){
-            Collection = Subscription;
+        try{
+            let query = data._id ? {_id: data._id} : '';
+            // console.log("update data", collectionName, data)
+            let Collection;
+            if(collectionName == 'subscriptions'){
+                Collection = Subscription;
+            }
+            else if(collectionName == 'users'){
+                Collection = User;
+            }
+            else if(collectionName == 'viewlogs'){
+                Collection = Viewlog;
+            }
+            
+            const result = await Collection.updateOne(query, data, { upsert: true });
+            console.log("warning", 'collection', Collection, "result", result)
+            if (result.nModified === 0) {
+                return undefined;
+            }else{
+                return result;
+            }
         }
-        else if(collectionName == 'users'){
-            Collection = User;
-        }
-        else if(collectionName == 'viewlogs'){
-            Collection = Viewlog;
-        }
-
-        const result = await Collection.updateOne(query, data, { upsert: true });
-        console.log("warning", 'collection', Collection, "result", result)
-        if (result.nModified === 0) {
-            return undefined;
-        }else{
-            return result;
+        catch(err){
+            console.log(collectionName, data._id, data)
         }
     }
 
