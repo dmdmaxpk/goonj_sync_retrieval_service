@@ -45,7 +45,6 @@ class SyncCollectionRepository {
             }
         }
         catch(err){
-            console.log(collectionName, data)
         }
     }
 
