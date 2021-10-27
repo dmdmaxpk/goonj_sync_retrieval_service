@@ -17,7 +17,7 @@ class SyncCollectionRepository {
         }
         let saveData = new Collection(data);
         let result = await saveData.save();
-        console.log("warning", 'collection', Collection, "result", result)
+        //console.log("warning", 'collection', Collection, "result", result)
         return result;
     }
 
@@ -35,7 +35,7 @@ class SyncCollectionRepository {
         }
 
         const result = await Collection.updateOne(query, data, { upsert: true });
-        console.log("warning", 'collection', Collection, "result", result)
+        //console.log("warning", 'collection', Collection, "result", result)
         if (result.nModified === 0) {
             return undefined;
         }else{

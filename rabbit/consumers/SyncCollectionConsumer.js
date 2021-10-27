@@ -6,6 +6,8 @@ class SyncCollectionConsumer{
         let dataObject = JSON.parse(message.content);
 
         let {collection, method, data} = dataObject;
+        console.log(collection, method, data);
+        
         let result = undefined;
 
         if(method == 'create'){
