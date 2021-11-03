@@ -20,11 +20,6 @@ const subscriptionSchema = new Schema({
     total_successive_bill_counts: Number,
     consecutive_successive_bill_counts: Number,
 
-    // priority 0 means no priority has been set so far.
-    // priority 1 for high and
-    // priority 2 for low
-    priority: { type: Number, default: 0, index: true },
-
     // Sources - android/ios/web/
     source: {type: String, default: 'android', index: true},
 
@@ -36,9 +31,14 @@ const subscriptionSchema = new Schema({
 
     // Affiliation marketing fields
     affiliate_unique_transaction_id: {type:String},
-    affiliate_mid: {type:String},
+    affiliate_mid: {type:String, index: true},
     is_affiliation_callback_executed: { type : Boolean, default: false },
     should_affiliation_callback_sent: Boolean,
+
+    // priority 0 means no priority has been set so far.
+    // priority 1 for high and
+    // priority 2 for low
+    priority: { type: Number, default: 0, index: true },
 
     queued: { type: Boolean, default: false },
 
@@ -61,5 +61,6 @@ const subscriptionSchema = new Schema({
     added_dtm: { type: Date, default: Date.now, index: true }
 }, { strict: true });
 subscriptionSchema.index({user_id:1,paywall_id:1},{unique: true});
+
 
 module.exports = mongoose.model('Subscription', subscriptionSchema);

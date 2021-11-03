@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
 const ShortId = require('mongoose-shortid-nodeps');
 const {Schema} = mongoose;
-
 const userSchema = new Schema({
     
     //FOR PRODUCTION
     _id: { type: ShortId, len: 12, retries: 4 },
-    msisdn: { type: String, required:true, unique: true },
+    msisdn: { type: String, index: true },
 
      // operator of the user (telenor/zong/ufone etc)
-    operator: {type: String, required: true, index: true},
+    operator: {type: String, index: true},
     
     // app / web  etc
     source: {type: String, default: "app", index: true},
@@ -26,7 +25,6 @@ const userSchema = new Schema({
     fullname: String,
     email: String,
     description: String,
-    preferences: { type: Array, index: true },
     avatar: String,
     dateOfBirth: String,
     gender: String,
