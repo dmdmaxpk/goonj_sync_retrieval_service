@@ -1,5 +1,5 @@
 {
-	"name": "goonj-paywall-message-service",
+	"name": "goonj-sync-retrieval-service",
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
